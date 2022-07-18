@@ -195,19 +195,6 @@ lvim.plugins = {
     "folke/lsp-colors.nvim",
     event = "BufRead",
   },
-  { "zbirenbaum/copilot.lua",
-    event = { "VimEnter" },
-    config = function()
-      vim.defer_fn(function()
-        require("copilot").setup {
-          plugin_manager_path = get_runtime_dir() .. "/site/pack/packer",
-        }
-      end, 100)
-    end,
-  },
-  { "zbirenbaum/copilot-cmp",
-    after = { "copilot.lua", "nvim-cmp" },
-  },
   {
     "rmagatti/goto-preview",
     config = function()
@@ -226,14 +213,38 @@ lvim.plugins = {
       }
     end
   },
-  { "octol/vim-cpp-enhanced-highlight" },
+  { "zbirenbaum/copilot.lua",
+    event = { "VimEnter" },
+    config = function()
+      vim.defer_fn(function()
+        require("copilot").setup {
+          plugin_manager_path = get_runtime_dir() .. "/site/pack/packer",
+        }
+      end, 100)
+    end,
+  },
+  { "zbirenbaum/copilot-cmp",
+    after = { "copilot.lua", "nvim-cmp" },
+  },
   {
     "Pocco81/AutoSave.nvim",
     config = function()
       require("autosave").setup()
     end,
   },
-  { "kdheepak/lazygit.nvim" }
+  { "octol/vim-cpp-enhanced-highlight" },
+  { "kdheepak/lazygit.nvim" },
+  {
+    "p00f/nvim-ts-rainbow",
+  },
+  {
+    "simrat39/symbols-outline.nvim",
+    cmd = "SymbolsOutline",
+  },
+  {
+    "folke/trouble.nvim",
+    cmd = "TroubleToggle",
+  },
 }
 
 -- goto_preview_definition customized keybindings
@@ -256,6 +267,20 @@ vim.api.nvim_set_keymap("n", "gP", "<cmd>lua require('goto-preview').close_all_w
 --   end,
 -- })
 
+-- rainbow bracket settings
+lvim.builtin.treesitter.rainbow.enable = true
+
+-- diagnostics summary settings
+lvim.builtin.which_key.mappings["t"] = {
+  name = "Diagnostics",
+  t = { "<cmd>TroubleToggle<cr>", "trouble" },
+  w = { "<cmd>TroubleToggle lsp_workspace_diagnostics<cr>", "workspace" },
+  d = { "<cmd>TroubleToggle lsp_document_diagnostics<cr>", "document" },
+  q = { "<cmd>TroubleToggle quickfix<cr>", "quickfix" },
+  l = { "<cmd>TroubleToggle loclist<cr>", "loclist" },
+  r = { "<cmd>TroubleToggle lsp_references<cr>", "references" },
+}
+
 -- copilot settings
 -- Can not be placed into the config method of the plugins.
 lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
@@ -265,6 +290,7 @@ table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
 local components = require("lvim.core.lualine.components")
 
 lvim.builtin.lualine.sections.lualine_a = { "mode" }
+lvim.builtin.lualine.sections.lualine_b = { "encoding" }
 lvim.builtin.lualine.sections.lualine_c = { "diff" }
 lvim.builtin.lualine.sections.lualine_y = {
   components.spaces,
