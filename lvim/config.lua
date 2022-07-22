@@ -287,12 +287,24 @@ lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
 table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
 
 -- lualine settings
-local components = require("lvim.core.lualine.components")
 
 lvim.builtin.lualine.sections.lualine_a = { "mode" }
-lvim.builtin.lualine.sections.lualine_b = { "encoding", "filename", "branch" }
-lvim.builtin.lualine.sections.lualine_c = { "diff" }
-lvim.builtin.lualine.sections.lualine_y = {
-  components.spaces,
-  components.location
-}
+lvim.builtin.lualine.sections.lualine_b = { "branch", "diff", "diagnostics" }
+lvim.builtin.lualine.sections.lualine_c = { {
+  "filename",
+  file_status = true, -- Displays file status (readonly status, modified status)
+  path = 1, -- 0: Just the filename
+  -- 1: Relative path
+  -- 2: Absolute path
+
+  shorting_target = 40, -- Shortens path to leave 40 spaces in the window
+  -- for other components. (terrible name, any suggestions?)
+  symbols = {
+    modified = "[+]", -- Text to show when the file is modified.
+    readonly = "[-]", -- Text to show when the file is non-modifiable or readonly.
+    unnamed = "[No Name]", -- Text to show for unnamed buffers.
+  },
+}, }
+lvim.builtin.lualine.sections.lualine_x = { "encoding", "fileformat", "filetype" }
+lvim.builtin.lualine.sections.lualine_y = { "progress" }
+lvim.builtin.lualine.sections.lualine_z = { "location" }
